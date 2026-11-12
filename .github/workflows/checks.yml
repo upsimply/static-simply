@@ -1,0 +1,50 @@
+# What every revision of the starter has to pass before it can reach a site:
+# the stylesheet compiles with the exact Tailwind CLI the panel builds it with
+# on the server, the built file is not committed, and VERSION is a version.
+#
+# Reused by ci.yml on every push and pull request, and by release.yml before
+# anything is published.
+name: Checks
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+env:
+  # Keep in step with App\Hosting\TailwindRuntime in the panel: a stylesheet
+  # that builds here must build the same way on a site.
+  TAILWIND_VERSION: v4.3.5
+  TAILWIND_SHA256: e47695cee3f0d90623a91f3939b08bdee610eb5ad99340adff9d4145b284d6cc
+
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Read the version
+        run: |
+          version="$(tr -d '[:space:]' < VERSION)"
+          if ! printf '%s' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error file=VERSION::VERSION must be MAJOR.MINOR.PATCH, found '$version'."
+            exit 1
+          fi
+          echo "Starter version $version"
+
+      - name: Keep the built stylesheet out of the repository
+        run: |
+          if git ls-files --error-unmatch site/assets/app.css >/dev/null 2>&1; then
+            echo "::error::site/assets/app.css is built on the server and must not be committed."
+            exit 1
+          fi
+
+      - name: Build the stylesheet with the panel's Tailwind CLI
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/tailwindcss" "https://github.com/tailwindlabs/tailwindcss/releases/download/${TAILWIND_VERSION}/tailwindcss-linux-x64"
+          echo "${TAILWIND_SHA256}  $RUNNER_TEMP/tailwindcss" | sha256sum -c -
+          chmod +x "$RUNNER_TEMP/tailwindcss"
+          cd site && "$RUNNER_TEMP/tailwindcss" -i src/app.css -o "$RUNNER_TEMP/app.css" --minify

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Your Business</title>
+    <meta name="description" content="A short sentence about what you do and who you do it for.">
+    <link rel="stylesheet" href="assets/app.css">
+    <script src="assets/alpine.min.js" defer></script>
+</head>
+<body class="bg-white font-sans text-gray-900 antialiased">
+    <header class="border-b border-gray-200" x-data="{ open: false }">
+        <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+            <a href="./" class="text-lg font-bold">Your Business</a>
+            <button type="button" class="rounded-md border border-gray-300 px-3 py-1.5 sm:hidden" @click="open = !open" :aria-expanded="open">Menu</button>
+            <nav class="hidden gap-6 sm:flex">
+                <a href="#services" class="hover:text-primary">Services</a>
+                <a href="#contact" class="hover:text-primary">Contact</a>
+            </nav>
+        </div>
+        <nav class="flex flex-col gap-3 px-6 pb-4 sm:hidden" x-show="open" x-cloak>
+            <a href="#services" @click="open = false">Services</a>
+            <a href="#contact" @click="open = false">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="mx-auto max-w-5xl px-6 py-24">
+            <h1 class="max-w-2xl text-4xl font-bold tracking-tight sm:text-5xl">A clear promise of what you do, in one line.</h1>
+            <p class="mt-6 max-w-xl text-lg text-gray-600">One or two sentences about who you help and why they choose you.</p>
+            <a href="#contact" class="mt-8 inline-block rounded-lg bg-primary px-6 py-3 font-semibold text-white">Get in touch</a>
+        </section>
+
+        <section id="services" class="bg-gray-50 py-20">
+            <div class="mx-auto grid max-w-5xl gap-6 px-6 sm:grid-cols-3">
+                <article class="rounded-xl bg-white p-6 shadow-sm">
+                    <h2 class="text-lg font-semibold">First service</h2>
+                    <p class="mt-2 text-gray-600">What it is, who it is for, and what they get from it.</p>
+                </article>
+                <article class="rounded-xl bg-white p-6 shadow-sm">
+                    <h2 class="text-lg font-semibold">Second service</h2>
+                    <p class="mt-2 text-gray-600">What it is, who it is for, and what they get from it.</p>
+                </article>
+                <article class="rounded-xl bg-white p-6 shadow-sm">
+                    <h2 class="text-lg font-semibold">Third service</h2>
+                    <p class="mt-2 text-gray-600">What it is, who it is for, and what they get from it.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="contact" class="mx-auto max-w-5xl px-6 py-20">
+            <h2 class="text-2xl font-bold">Get in touch</h2>
+            <p class="mt-4 text-gray-600">Tell people the best way to reach you, and when they can expect an answer.</p>
+            <a href="mailto:hello@example.com" class="mt-6 inline-block font-semibold text-primary">hello@example.com</a>
+        </section>
+    </main>
+
+    <footer class="border-t border-gray-200 py-8 text-center text-sm text-gray-500">
+        &copy; <span x-data x-text="new Date().getFullYear()">2026</span> Your Business
+    </footer>
+</body>
+</html>
